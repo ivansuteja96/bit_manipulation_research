@@ -1,0 +1,10 @@
+./test_1 -db_config="user=postgres password=postgres dbname=bitmanipulation_research host=127.0.0.1 port=5432 sslmode=disable" -csv_file="" -total_line=1000000 -qps=1
+./test_2 -db_config="user=postgres password=postgres dbname=bitmanipulation_research host=127.0.0.1 port=5432 sslmode=disable" -csv_file="" -total_line=1000000 -qps=1
+./test_3 -db_config="user=postgres password=postgres dbname=bitmanipulation_research host=127.0.0.1 port=5432 sslmode=disable" -csv_file="" -total_line=1000000 -qps=1
+./test_4 -db_config="user=postgres password=postgres dbname=bitmanipulation_research host=127.0.0.1 port=5432 sslmode=disable" -csv_file="" -total_line=1000000 -qps=1
+./csv_generator -total_data=1000000
+
+SELECT pg_size_pretty( pg_total_relation_size('table_without_bit') ) as without_bit,
+pg_size_pretty( pg_total_relation_size('table_with_bit_int64') ) as with_bit_int64,
+pg_size_pretty( pg_total_relation_size('table_with_bit_string') ) as with_bit_string,
+pg_size_pretty( pg_total_relation_size('table_with_bit_bit') ) as with_bit_bit;
