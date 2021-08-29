@@ -14,4 +14,4 @@ WITH (
 
 create unique index concurrently table_with_bit_bit_idx_1 on table_with_bit_bit(type_id, value);
 
-COPY table_with_bit_bit FROM '' DELIMITER ',' CSV HEADER;
+COPY table_with_bit_bit FROM '/home/admin/repo/bit_manipulation_research/script/result3-1.csv' DELIMITER ',' CSV HEADER;

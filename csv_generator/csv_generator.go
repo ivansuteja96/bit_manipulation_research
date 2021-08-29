@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -14,21 +15,49 @@ import (
 
 func main() {
 	var (
-		i                  int
-		i1                 int
+		split              int
 		totalGeneratedData int
 	)
 
 	flag.IntVar(&totalGeneratedData, "total_data", 0, "Total Data")
+	flag.IntVar(&split, "split", 1, "Split Into")
 	flag.Parse()
+	if split < 1 {
+		log.Println("Split must >= 1")
+		return
+	}
+	if totalGeneratedData < 1 {
+		log.Println("total_data must >= 1")
+		return
+	}
+
+	part := totalGeneratedData / split
+
+	for i := 1; i <= split; i++ {
+		startIndex := part * (i - 1)
+		endIndex := part * i
+		if endIndex > totalGeneratedData {
+			endIndex = totalGeneratedData
+		}
+		subTotalGeneratedData := endIndex - startIndex
+
+		subMain(startIndex, i, subTotalGeneratedData)
+	}
+
+}
+
+func subMain(i1 int, split int, totalGeneratedData int) {
+	starti1 := i1
+
+	var i int
 
 	s := rand.NewSource(time.Now().Unix())
 	r := rand.New(s)
-	file1, _ := os.Create("result1.csv")
+	file1, _ := os.Create(fmt.Sprintf("result1-%+v.csv", split))
 	defer file1.Close()
-	file2, _ := os.Create("result2.csv")
+	file2, _ := os.Create(fmt.Sprintf("result2-%+v.csv", split))
 	defer file2.Close()
-	file3, _ := os.Create("result3.csv")
+	file3, _ := os.Create(fmt.Sprintf("result3-%+v.csv", split))
 	defer file3.Close()
 
 	writer1 := csv.NewWriter(file1)
@@ -75,14 +104,14 @@ func main() {
 			sourceCount--
 			i++
 			sourceBinary += int64(math.Pow(2, float64(sourceID-1)))
-			writer1.Write([]string{fmt.Sprintf("%+v", i), fmt.Sprintf("%+v", typeID), value, fmt.Sprintf("%+v", sourceID), "TRUE"})
+			writer1.Write([]string{fmt.Sprintf("%+v", i1), fmt.Sprintf("%+v", typeID), value, fmt.Sprintf("%+v", sourceID), "TRUE"})
 			i1++
 		}
 
 		writer2.Write([]string{fmt.Sprintf("%+v", i1), fmt.Sprintf("%+v", typeID), value, fmt.Sprintf("%+v", sourceBinary)})
 		sourceBit, _ := SourceToStringBit(listSourceID, 1000)
 		writer3.Write([]string{fmt.Sprintf("%+v", i1), fmt.Sprintf("%+v", typeID), value, sourceBit})
-		fmt.Printf("Processing on : %+v/%+v\n", i1, totalGeneratedData)
+		fmt.Printf("Processing on : %+v/%+v, split : %+v\n", i1-starti1, totalGeneratedData, split)
 
 		if i == totalGeneratedData {
 			i = 0

@@ -14,4 +14,4 @@ WITH (
 
 CREATE UNIQUE INDEX concurrently table_with_bit_string_idx_1 on table_with_bit_string(type_id, value);
 
-COPY table_with_bit_string FROM '' DELIMITER ',' CSV HEADER;
+COPY table_with_bit_string FROM '/home/admin/repo/bit_manipulation_research/script/result3-1.csv' DELIMITER ',' CSV HEADER;
